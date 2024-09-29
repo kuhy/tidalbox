@@ -28,6 +28,12 @@ s.reboot { // server options are only updated on reboot
             ~d7 = ~dirt.orbits[6]; ~d8 = ~dirt.orbits[7]; ~d9 = ~dirt.orbits[8];
             ~d10 = ~dirt.orbits[9]; ~d11 = ~dirt.orbits[10]; ~d12 = ~dirt.orbits[11];
         );
+
+        MIDIClient.init( outports: 4 );
+        ~dirt.soundLibrary.addMIDI(\midi0, MIDIOut(0));
+        ~dirt.soundLibrary.addMIDI(\midi1, MIDIOut(1));
+        ~dirt.soundLibrary.addMIDI(\midi2, MIDIOut(2));
+        ~dirt.soundLibrary.addMIDI(\midi3, MIDIOut(3));
     };
 
     s.latency = 0.3; // increase this if you get "late" messages
