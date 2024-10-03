@@ -84,6 +84,14 @@ RUN echo "Quarks.install(\"SuperDirt\", \"v$SD_VERSION\"); 0.exit;" | sclang
 # Install Tidal Cycles
 RUN cabal update && cabal install tidal --lib
 
+# Install Tidal Drum Patterns
+RUN git clone https://github.com/lvm/tidal-drum-patterns && \
+    cd tidal-drum-patterns && \
+    cabal clean && \
+    cabal configure && \
+    cabal build && \
+    cabal install --lib
+
 # Install Flok
 RUN npm install -g flok-web@latest flok-repl@latest
 
