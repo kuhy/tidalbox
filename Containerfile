@@ -7,13 +7,20 @@ ENV SC_VERSION=3.13.0
 ENV SCP_VERSION=3.13.0
 
 # SuperDirt version
-ENV SD_VERSION=1.7.3
+ENV SD_VERSION=1.7.4
+
+# Tidal Cycles version
+ENV TIDAL_VERSION=1.9.5
+
+# Flok version
+ENV FLOK_VERSION=1.2.0
 
 # Install packages
 RUN apt update && apt install -y -q \
     pipewire-audio \
     pipewire-audio-client-libraries \
     wget \
+    unzip \
     bzip2 \
     cmake \
     build-essential \
@@ -32,6 +39,10 @@ RUN apt update && apt install -y -q \
     ghc \
     cabal-install \
     npm
+
+# Download extra samples
+RUN wget -q https://slab.org/tmp/samples-extra.zip -O samples.zip && \
+    unzip samples.zip -d /
 
 # Download SuperCollider
 RUN mkdir -p /tmp/sc && \
@@ -82,7 +93,7 @@ RUN cd /tmp/scp/sc3-plugins-$SCP_VERSION-Source && \
 RUN echo "Quarks.install(\"SuperDirt\", \"v$SD_VERSION\"); 0.exit;" | sclang
 
 # Install Tidal Cycles
-RUN cabal update && cabal install tidal --lib
+RUN cabal update && cabal install tidal-$TIDAL_VERSION --lib
 
 # Install Tidal Drum Patterns
 RUN git clone https://github.com/lvm/tidal-drum-patterns && \
@@ -93,7 +104,7 @@ RUN git clone https://github.com/lvm/tidal-drum-patterns && \
     cabal install --lib
 
 # Install Flok
-RUN npm install -g flok-web@latest flok-repl@latest
+RUN npm install -g flok-web@latest flok-repl@"$FLOK_VERSION"
 
 # SuperCollider startup file
 COPY startup.scd /root/.config/SuperCollider/startup.scd
