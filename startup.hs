@@ -2,11 +2,46 @@
 :set prompt ""
 
 import Sound.Tidal.Context
-
 import System.IO (hSetEncoding, stdout, utf8)
 hSetEncoding stdout utf8
 
-tidal <- startTidal (superdirtTarget {oLatency = 0.05, oAddress = "127.0.0.1", oPort = 57120}) (defaultConfig {cVerbose = True, cFrameTimespan = 1/20})
+:{
+visualizerAddress <- do
+    value <- System.Environment.lookupEnv "VISUALIZER_ADDRESS"
+    case value of
+        Just a  -> pure a
+        Nothing -> pure "host.containers.internal"
+:}
+
+:{
+visualizerPort <- do
+    value <- System.Environment.lookupEnv "VISUALIZER_PORT"
+    case value of
+        Just a  -> pure (read a :: Int)
+        Nothing -> pure 50503
+:}
+
+:{
+let target = Target {oName = "visualizer",
+                     oAddress = visualizerAddress,
+                     oPort = visualizerPort,
+                     oLatency = 0.2,
+                     oSchedule = Live,
+                     oWindow = Nothing,
+                     oHandshake = False,
+                     oBusPort = Nothing
+                    }
+
+    oscmap = [(target, [superdirtShape]), (superdirtTarget, [superdirtShape])]
+:}
+
+:{
+tidal <- do
+    value <- System.Environment.lookupEnv "VISUALIZER"
+    case value of
+        Just "true" -> startStream (defaultConfig {cCtrlListen = False}) oscmap
+        _           -> startTidal superdirtTarget defaultConfig
+:}
 
 :{
 let only = (hush >>)
