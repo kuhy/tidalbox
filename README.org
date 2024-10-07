@@ -1,18 +1,28 @@
 #+TITLE: TidalBox
-/Tidal Cycles and Flok inside a container/
+/Tidal Cycles, SuperCollider, and Flok inside a container/
 
 Heavily inspired by [[https://github.com/virtuaCode/docker-tidal]].
+
+Prerequisities:
+- Podman or Docker
+- PipeWire
 
 Build the image using Podman (you can also use Docker with the same parameters):
 #+BEGIN_SRC sh
   podman build -t tidalbox .
 #+END_SRC
 
-Then you can start Flok with Tidal Cyles session named =alkorejf=
-using the following command:
+Then you can start Flok with Tidal Cyles (and SuperCollider) session
+named =test= using the following command:
 #+BEGIN_SRC sh
-  podman run --replace -it  -v /run/user/1000/pipewire-0:/tmp/pipewire-0 -e XDG_RUNTIME_DIR=/tmp \
-             --name tidalbox -p 3000:3000 tidalbox -s alkorejf
+  podman run --replace -it \
+    -v /run/user/1000/pipewire-0:/tmp/pipewire-0 -e XDG_RUNTIME_DIR=/tmp \
+    --device /dev/snd/seq \
+    -p 3000:3000 \
+    --name tidalbox tidalbox test
 #+END_SRC
 
 Finally, you can start jamming at the following address: [[http://localhost:3000/s/alkorejf]]
+
+It is also possible to mount additional samples or connect external
+OSC visualizer. For additional examples, check the provided [[file:justfile][justfile]].
