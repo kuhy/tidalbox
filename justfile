@@ -20,3 +20,16 @@ vis SESSION ADDRESS="host.containers.internal" PORT="50503":
     -v samples:/samples \
     -p 3000:3000 \
     --name tidalbox tidalbox {{SESSION}}
+
+hydra SESSION:
+  docker run --replace -it \
+    -v /run/user/1000/pipewire-0:/tmp/pipewire-0 -e XDG_RUNTIME_DIR=/tmp \
+    --device /dev/snd/seq \
+    -e HYDRA_OSC=true \
+    -e VISUALIZER=true \
+    -e VISUALIZER_ADDRESS=localhost \
+    -e VISUALIZER_PORT=41234 \
+    -v samples:/samples \
+    -p 3000:3000 \
+    -p 8080:8080 \
+    --name tidalbox tidalbox {{SESSION}}

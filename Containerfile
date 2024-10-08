@@ -106,11 +106,19 @@ RUN git clone https://github.com/lvm/tidal-drum-patterns && \
 # Install Flok
 RUN npm install -g flok-web@latest flok-repl@"$FLOK_VERSION"
 
+# Install hydra-osc
+RUN git clone https://github.com/ojack/hydra-osc.git && \
+    cd hydra-osc && \
+    npm install
+
 # SuperCollider startup file
 COPY startup.scd /root/.config/SuperCollider/startup.scd
 
 # Tidal Cycles startup file
 COPY startup.hs /root/.config/tidal/startup.hs
+
+# hydra-osc startup file
+COPY hydra-osc.js /hydra-osc/hydra-osc.js
 
 # Startup script
 COPY startup.sh /root/startup.sh
