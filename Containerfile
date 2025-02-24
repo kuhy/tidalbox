@@ -13,7 +13,7 @@ ENV SD_VERSION=1.7.4
 ENV TIDAL_VERSION=1.9.5
 
 # Flok version
-ENV FLOK_VERSION=1.2.0
+ENV FLOK_VERSION=1.3.0
 
 # Install packages
 RUN apt update && apt install -y -q \
